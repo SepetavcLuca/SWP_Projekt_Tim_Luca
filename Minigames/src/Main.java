@@ -1,4 +1,5 @@
 import Models.*;
+import Repl.*;
 
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -53,9 +54,9 @@ public class Main {
 
     // Anmeldung
     public static boolean login (User u){
-        IRepositoryCasino rep = null;
+        ReposyDB rep = null;
         try {
-            rep = new RepositoryCasinoDB();
+            rep = new Reposy();
             rep.open();
             System.out.println("\n\nAnmeldung:");
             System.out.println("==========");
@@ -79,6 +80,7 @@ public class Main {
 
         }
         catch (ClassNotFoundException e) {
+
             // System.out.println("MySQL-Treiber konnte nicht geladen werden!");
 
         }
@@ -96,9 +98,9 @@ public class Main {
         return false;
     }
     public static void register(User u) {
-        IRepositoryCasino rep = null;
+        ReposyDB rep = null;
         try {
-            rep = new RepositoryCasinoDB();
+            rep = new Reposy();
             rep.open();
             System.out.println("\n\nRegristration:");
             System.out.print("==============");
@@ -106,10 +108,10 @@ public class Main {
                 System.out.println("Sie wurden erfolgreich regristriert");
             }
         } catch (ClassNotFoundException e) {
-            //System.out.println("MySQL-Treiber konnte nicht geladen werden!");
+            System.out.println("MySQL-Treiber konnte nicht geladen werden!");
 
         } catch (SQLException e) {
-            // System.out.println("Datenbankfehler!");
+            System.out.println("Datenbankfehler!");
         }
 
         finally{
@@ -130,13 +132,12 @@ public class Main {
         u.setUsername(un);
         System.out.print("Geben sie ihr Passwort ein: ");
         u.setPassword(reader.next());
-        u.setCredit(0);
         return u;
     }
     public static boolean checkIfUsernameAlreadyExists(String un){
-        IRepositoryCasino rep = null;
+        ReposyDB rep = null;
         try {
-            rep = new RepositoryCasinoDB();
+            rep = new Reposy();
             rep.open();
 
             if (rep.checkIfUserExists(un)){
@@ -161,6 +162,25 @@ public class Main {
         }
         return false;
     }
+    public static int checkIfInputIsRightInt(String input, int highestPosibilty, int lowestPosibilty){
+        reader = new Scanner(System.in);
+        try {
+            int result = Integer.parseInt(input);
+            if(result <= highestPosibilty && result >=lowestPosibilty){
+                return result;
+            }
+            else{
+                System.out.println("Sie haben eine zu große/kleine Zahl eingegeben.\n" +
+                        "Bitte versuchen sie es erneut.\n");
+            }
+        } catch (NumberFormatException e) {
+            System.out.println("Sie haben eine falsche Zahl/Zeichen eingegben.\n" +
+                    "Bitte versuchen sie es erneut.\n");
+            return -1;
+        }
+        return -1;
+    }
+
 
     // TicTacToe
     public static void TicTacToe(){
